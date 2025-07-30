@@ -1,0 +1,44 @@
+---
+title: "quarto example"
+author: "Bruno"
+format: html
+---
+
+# Hello world
+
+```{python}
+import pandas as pd
+
+# Ruta absoluta al archivo movido
+ruta_archivo = r"C:\Users\limco\Documents\Nueva carpeta (77)\household_power_consumption.txt"
+
+df = pd.read_csv(ruta_archivo, sep=';', low_memory=False)
+
+print(df.head())
+
+```
+
+```{python}
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Convertir a número, poniendo NaN donde no pueda
+df['Global_active_power'] = pd.to_numeric(df['Global_active_power'], errors='coerce')
+
+# Convertir fecha
+df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
+
+# Quitar filas con NaN en esa columna (no numéricos)
+df = df.dropna(subset=['Global_active_power'])
+
+# Agrupar promedio diario
+df_daily = df.groupby('Date')['Global_active_power'].mean()
+
+# Graficar
+df_daily.plot(kind='line', figsize=(8,4), title='Promedio diario de Consumo de energía activa')
+plt.xlabel('Fecha')
+plt.ylabel('Potencia activa promedio (kW)')
+plt.show()
+
+```
